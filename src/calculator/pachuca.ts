@@ -14,7 +14,6 @@ export type PachucaClassification =
 export type PachucaFeeLine = MoneyResult & {
   feeId: string;
   unit: "fixed" | "per_m2" | "per_lot";
-  status: "DERIVED" | "INFERRED" | "UNKNOWN" | "CONFLICT";
 };
 
 export type PachucaEstimate = {
@@ -29,14 +28,6 @@ function calculateFee(
   fee: NonNullable<ReturnType<typeof getPachucaFee>>,
   areaM2: number
 ): MoneyResult {
-  if (fee.status !== "VERIFIED") {
-    return {
-      amount: 0,
-      currency: "MXN",
-      status: fee.status
-    };
-  }
-
   if (fee.unit === "fixed" || fee.unit === "per_lot") {
     return { amount: fee.amount, currency: "MXN", status: "DERIVED" };
   }
@@ -64,18 +55,13 @@ export function estimatePachucaSingleFamilyNewBuild(
 
   for (const id of feeIds) {
     const fee = getPachucaFee(id);
-    if (!fee) {
+    if (!fee || fee.status !== "VERIFIED") {
       unknownFees.push(id);
       continue;
     }
 
     const result = calculateFee(fee, areaM2);
-    if (fee.status !== "VERIFIED") {
-      unknownFees.push(id);
-      continue;
-    }
-
-    lines.push({ ...result, feeId: id, unit: fee.unit, status: result.status });
+    lines.push({ ...result, feeId: id, unit: fee.unit });
   }
 
   const totalKnown = {
