@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {"id":"ruts-construction-license-3812","institution":"Gobierno del Estado de Hidalgo","title":"Licencia de Construcción","url":"https://ruts.hidalgo.gob.mx/ver/3812","type":"procedure-fiche","authorityLevel":"OFFICIAL_OPERATIONAL","retrievedAt":"2026-09-11"},
+    {"id":"ruts-alignment-3687","institution":"Gobierno del Estado de Hidalgo","title":"Constancia de Alineamiento y Número Oficial","url":"https://ruts.hidalgo.gob.mx/ver/3687","type":"procedure-fiche","authorityLevel":"OFFICIAL_OPERATIONAL","retrievedAt":"2026-09-11"},
+    {"id":"ruts-land-use-4766","institution":"Gobierno del Estado de Hidalgo","title":"Licencia de Uso de Suelo Habitacional-Unifamiliar","url":"https://ruts.hidalgo.gob.mx/ver/4766","type":"procedure-fiche","authorityLevel":"OFFICIAL_OPERATIONAL","retrievedAt":"2026-09-11"},
+    {"id":"ruts-congruence-6700","institution":"Gobierno del Estado de Hidalgo","title":"Dictamen de Congruencia en Materia de Ordenamiento Ecológico Local","url":"https://ruts.hidalgo.gob.mx/ver/6700","type":"procedure-fiche","authorityLevel":"OFFICIAL_OPERATIONAL","retrievedAt":"2026-09-11"},
+    {"id":"ruts-completion-3684","institution":"Gobierno del Estado de Hidalgo","title":"Terminación de Obra","url":"https://ruts.hidalgo.gob.mx/ver/3684","type":"procedure-fiche","authorityLevel":"OFFICIAL_OPERATIONAL","retrievedAt":"2026-09-11"},
+    {"id":"pachuca-income-law-2026-original","institution":"Municipio de Pachuca de Soto","title":"Ley de Ingresos para el Municipio de Pachuca de Soto, Hidalgo, correspondiente al Ejercicio Fiscal 2026","url":"https://datos.pachuca.gob.mx/sipot/1/PDFS/Ley_Ingresos_Pachuca_2026.pdf","type":"law","authorityLevel":"PRIMARY_OFFICIAL","publicationDate":"2025-12-31","retrievedAt":"2026-09-11"},
+    {"id":"pachuca-income-law-2026-amendment-590","institution":"Periódico Oficial del Estado de Hidalgo","title":"Decreto número 590-LXVI: modificación a la Ley de Ingresos de Pachuca de Soto para 2026","url":"https://periodico.hidalgo.gob.mx/POEHpdfpublic/2026_abr_07_alc0_14.pdf","type":"decree","authorityLevel":"PRIMARY_OFFICIAL","publicationDate":"2026-04-07","retrievedAt":"2026-09-11"},
+    {"id":"pachuca-construction-regulation-2024","institution":"Municipio de Pachuca de Soto","title":"Reglamento de Construcciones y Urbanas 2024","url":"https://datos.pachuca.gob.mx/sipot/1/PDFS/Reglamento-Construcciones-Urbanas-2024.pdf","type":"municipal-regulation","authorityLevel":"PRIMARY_OFFICIAL","retrievedAt":"2026-09-11"}
+  ],
+  "versions": [
+    {"id":"source-version-ruts-construction-2026-06-16","sourceId":"ruts-construction-license-3812","versionLabel":"updated-2026-06-16","retrievedAt":"2026-09-11"},
+    {"id":"source-version-ruts-alignment-2026-06-16","sourceId":"ruts-alignment-3687","versionLabel":"updated-2026-06-16","retrievedAt":"2026-09-11"},
+    {"id":"source-version-ruts-land-use-2026-06-18","sourceId":"ruts-land-use-4766","versionLabel":"updated-2026-06-18","retrievedAt":"2026-09-11"},
+    {"id":"source-version-ruts-congruence-2026-06-24","sourceId":"ruts-congruence-6700","versionLabel":"updated-2026-06-24","retrievedAt":"2026-09-11"},
+    {"id":"source-version-ruts-completion-2026-06-16","sourceId":"ruts-completion-3684","versionLabel":"updated-2026-06-16","retrievedAt":"2026-09-11"},
+    {"id":"source-version-income-law-2026-12-31","sourceId":"pachuca-income-law-2026-original","versionLabel":"published-2025-12-31","publishedAt":"2025-12-31","effectiveFrom":"2026-01-01","retrievedAt":"2026-09-11"},
+    {"id":"source-version-income-law-2026-amendment-2026-04-07","sourceId":"pachuca-income-law-2026-amendment-590","versionLabel":"decree-590-lxvi","publishedAt":"2026-04-07","effectiveFrom":"2026-04-08","retrievedAt":"2026-09-11"},
+    {"id":"source-version-construction-regulation-2024","sourceId":"pachuca-construction-regulation-2024","versionLabel":"2024-regulation","retrievedAt":"2026-09-11"}
+  ]
+}
