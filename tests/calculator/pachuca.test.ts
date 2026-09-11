@@ -12,11 +12,20 @@ describe("Pachuca 2026 single-family new-build estimate", () => {
     expect(result.totalKnown.currency).toBe("MXN");
   });
 
-  it("does not invent a construction tariff when it is not configured", () => {
+  it("uses the primary 2026 construction tariff for economic housing", () => {
     const result = estimatePachucaSingleFamilyNewBuild(180, "economic");
 
-    expect(result.unknownFees).toContain("construction-economic");
-    expect(result.totalKnown.amount).toBe(1891.6);
+    expect(result.unknownFees).toEqual([]);
+    expect(result.lines.map((line) => line.amount)).toEqual([158, 313, 3708, 480.6]);
+    expect(result.totalKnown.amount).toBe(4659.6);
+  });
+
+  it("uses the primary 2026 tariff for progressive housing", () => {
+    const result = estimatePachucaSingleFamilyNewBuild(100, "progressive");
+
+    expect(result.unknownFees).toEqual([]);
+    expect(result.lines.map((line) => line.amount)).toEqual([158, 522, 2060, 267]);
+    expect(result.totalKnown.amount).toBe(3007);
   });
 
   it("rejects zero or negative area", () => {
