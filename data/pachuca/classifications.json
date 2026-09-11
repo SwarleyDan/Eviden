@@ -1,0 +1,13 @@
+{
+  "jurisdiction": "mx-hgo-pachuca",
+  "classifications": [
+    {"id":"economic","name":"Económico","slug":"economic","category":"RESIDENTIAL"},
+    {"id":"popular","name":"Popular","slug":"popular","category":"RESIDENTIAL"},
+    {"id":"social-interest","name":"Interés social","slug":"social-interest","category":"RESIDENTIAL"},
+    {"id":"medium-interest","name":"Interés medio","slug":"medium-interest","category":"RESIDENTIAL"},
+    {"id":"residential-medium","name":"Residencial medio","slug":"residential-medium","category":"RESIDENTIAL"},
+    {"id":"residential-high","name":"Residencial alto","slug":"residential-high","category":"RESIDENTIAL"},
+    {"id":"campestre","name":"Campestre","slug":"campestre","category":"RESIDENTIAL"}
+  ],
+  "note": "La clasificación oficial de un predio no debe inferirse únicamente a partir de superficie construida. Las reglas de compatibilidad del MVP son orientativas y deben conservar su carácter INFERRED hasta incorporar el instrumento territorial aplicable al predio."
+}
