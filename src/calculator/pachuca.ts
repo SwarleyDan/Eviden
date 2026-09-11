@@ -3,6 +3,7 @@ import { calculatePerSquareMeter } from "./index";
 import { getPachucaFee } from "../data/pachuca-fees";
 
 export type PachucaClassification =
+  | "progressive"
   | "economic"
   | "popular"
   | "social-interest"
