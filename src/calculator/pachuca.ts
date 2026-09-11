@@ -1,5 +1,6 @@
 import type { MoneyResult } from "./index";
 import { calculatePerSquareMeter } from "./index";
+import { getPachucaFee } from "../data/pachuca-fees";
 
 export type PachucaClassification =
   | "economic"
@@ -10,32 +11,10 @@ export type PachucaClassification =
   | "residential-high"
   | "campestre";
 
-type Fee = {
-  id: string;
-  amount: number;
-  unit: "fixed" | "per_m2" | "per_lot";
-  status: "VERIFIED" | "DERIVED" | "INFERRED" | "UNKNOWN" | "CONFLICT";
-};
-
-const FEES: Record<string, Fee> = {
-  "alignment-official-number": { id: "alignment-official-number", amount: 158, unit: "fixed", status: "VERIFIED" },
-  "completion-of-work": { id: "completion-of-work", amount: 2.67, unit: "per_m2", status: "VERIFIED" },
-  "land-use-economic": { id: "land-use-economic", amount: 313, unit: "per_lot", status: "VERIFIED" },
-  "land-use-popular": { id: "land-use-popular", amount: 313, unit: "per_lot", status: "VERIFIED" },
-  "land-use-social-interest": { id: "land-use-social-interest", amount: 522, unit: "per_lot", status: "VERIFIED" },
-  "land-use-medium-interest": { id: "land-use-medium-interest", amount: 730, unit: "per_lot", status: "VERIFIED" },
-  "land-use-residential-medium": { id: "land-use-residential-medium", amount: 939, unit: "per_lot", status: "VERIFIED" },
-  "land-use-residential-high": { id: "land-use-residential-high", amount: 1203, unit: "per_lot", status: "VERIFIED" },
-  "land-use-campestre": { id: "land-use-campestre", amount: 939, unit: "per_lot", status: "VERIFIED" },
-  "construction-social-interest": { id: "construction-social-interest", amount: 35.02, unit: "per_m2", status: "VERIFIED" },
-  "construction-medium-interest": { id: "construction-medium-interest", amount: 41.2, unit: "per_m2", status: "VERIFIED" },
-  "construction-residential-medium": { id: "construction-residential-medium", amount: 52.26, unit: "per_m2", status: "VERIFIED" },
-  "construction-residential-high": { id: "construction-residential-high", amount: 55.62, unit: "per_m2", status: "VERIFIED" }
-};
-
 export type PachucaFeeLine = MoneyResult & {
   feeId: string;
-  unit: Fee["unit"];
+  unit: "fixed" | "per_m2" | "per_lot";
+  status: "DERIVED" | "INFERRED" | "UNKNOWN" | "CONFLICT";
 };
 
 export type PachucaEstimate = {
@@ -46,10 +25,22 @@ export type PachucaEstimate = {
   totalKnown: MoneyResult;
 };
 
-function calculateFee(fee: Fee, areaM2: number): MoneyResult {
+function calculateFee(
+  fee: NonNullable<ReturnType<typeof getPachucaFee>>,
+  areaM2: number
+): MoneyResult {
+  if (fee.status !== "VERIFIED") {
+    return {
+      amount: 0,
+      currency: "MXN",
+      status: fee.status
+    };
+  }
+
   if (fee.unit === "fixed" || fee.unit === "per_lot") {
     return { amount: fee.amount, currency: "MXN", status: "DERIVED" };
   }
+
   return calculatePerSquareMeter(areaM2, fee.amount);
 }
 
@@ -72,13 +63,19 @@ export function estimatePachucaSingleFamilyNewBuild(
   const unknownFees: string[] = [];
 
   for (const id of feeIds) {
-    const fee = FEES[id];
+    const fee = getPachucaFee(id);
     if (!fee) {
       unknownFees.push(id);
       continue;
     }
+
     const result = calculateFee(fee, areaM2);
-    lines.push({ ...result, feeId: id, unit: fee.unit });
+    if (fee.status !== "VERIFIED") {
+      unknownFees.push(id);
+      continue;
+    }
+
+    lines.push({ ...result, feeId: id, unit: fee.unit, status: result.status });
   }
 
   const totalKnown = {
