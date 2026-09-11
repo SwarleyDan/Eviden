@@ -42,18 +42,13 @@ export type PachucaEstimate = {
   areaM2: number;
   classification: PachucaClassification;
   lines: PachucaFeeLine[];
+  unknownFees: string[];
   totalKnown: MoneyResult;
 };
 
-function getFee(id: string): Fee {
-  const fee = FEES[id];
-  if (!fee) throw new Error(`Fee not configured: ${id}`);
-  return fee;
-}
-
 function calculateFee(fee: Fee, areaM2: number): MoneyResult {
   if (fee.unit === "fixed" || fee.unit === "per_lot") {
-    return { amount: fee.amount, currency: "MXN", status: fee.status === "VERIFIED" ? "DERIVED" : fee.status };
+    return { amount: fee.amount, currency: "MXN", status: "DERIVED" };
   }
   return calculatePerSquareMeter(areaM2, fee.amount);
 }
@@ -66,15 +61,25 @@ export function estimatePachucaSingleFamilyNewBuild(
     throw new Error("areaM2 must be a positive number");
   }
 
-  const constructionFeeId = `construction-${classification}`;
-  const landUseFeeId = `land-use-${classification}`;
-  const ids = ["alignment-official-number", landUseFeeId, constructionFeeId, "completion-of-work"];
+  const feeIds = [
+    "alignment-official-number",
+    `land-use-${classification}`,
+    `construction-${classification}`,
+    "completion-of-work"
+  ];
 
-  const lines = ids.map((id) => {
-    const fee = getFee(id);
+  const lines: PachucaFeeLine[] = [];
+  const unknownFees: string[] = [];
+
+  for (const id of feeIds) {
+    const fee = FEES[id];
+    if (!fee) {
+      unknownFees.push(id);
+      continue;
+    }
     const result = calculateFee(fee, areaM2);
-    return { ...result, feeId: id, unit: fee.unit };
-  });
+    lines.push({ ...result, feeId: id, unit: fee.unit });
+  }
 
   const totalKnown = {
     amount: Number(lines.reduce((sum, line) => sum + line.amount, 0).toFixed(2)),
@@ -82,5 +87,5 @@ export function estimatePachucaSingleFamilyNewBuild(
     status: "DERIVED" as const
   };
 
-  return { areaM2, classification, lines, totalKnown };
+  return { areaM2, classification, lines, unknownFees, totalKnown };
 }
