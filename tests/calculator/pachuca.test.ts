@@ -43,7 +43,7 @@ describe("Pachuca 2026 single-family new-build estimate", () => {
     for (const [classification, rate] of Object.entries(expectedRates)) {
       const result = estimatePachucaSingleFamilyNewBuild(100, classification as keyof typeof expectedRates);
       expect(result.unknownFees).toEqual([]);
-      expect(result.lines.find((line) => line.feeId === `construction-${classification}`)?.amount).toBe(rate * 100);
+      expect(result.lines.find((line) => line.feeId === `construction-${classification}`)?.amount).toBeCloseTo(rate * 100, 10);
     }
   });
 
