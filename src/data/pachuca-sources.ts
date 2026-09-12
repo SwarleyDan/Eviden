@@ -23,6 +23,12 @@ export type PachucaSourceVersion = {
   status?: string;
 };
 
+export type PachucaSourceActivationStatus =
+  | "USABLE"
+  | "PENDING_SCOPE_REVIEW"
+  | "HISTORICAL_OR_STATUS_REVIEW"
+  | "MISSING";
+
 type PachucaSourcesData = {
   sources: PachucaSource[];
   versions: PachucaSourceVersion[];
@@ -50,9 +56,25 @@ export function resolvePachucaSourceVersion(id: string):
   return { source, version };
 }
 
-export function isPachucaSourceVersionUsable(id: string): boolean {
+export function getPachucaSourceActivationStatus(
+  id: string
+): PachucaSourceActivationStatus {
   const version = getPachucaSourceVersion(id);
-  return version !== undefined && version.status !== "PENDING_SCOPE_REVIEW";
+  if (!version) return "MISSING";
+
+  if (version.status === "PENDING_SCOPE_REVIEW") {
+    return "PENDING_SCOPE_REVIEW";
+  }
+
+  if (version.status === "HISTORICAL_OR_STATUS_REVIEW") {
+    return "HISTORICAL_OR_STATUS_REVIEW";
+  }
+
+  return "USABLE";
+}
+
+export function isPachucaSourceVersionUsable(id: string): boolean {
+  return getPachucaSourceActivationStatus(id) === "USABLE";
 }
 
 export function listPachucaSources(): readonly PachucaSource[] {
