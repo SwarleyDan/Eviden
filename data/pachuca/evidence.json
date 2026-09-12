@@ -1,0 +1,11 @@
+{
+  "jurisdiction": "mx-hgo-pachuca",
+  "evidence": [
+    {"id":"income-law-2026-art23-alignment","sourceVersionId":"source-version-income-law-2026-12-31","provision":"Art. 23","description":"2026 municipal income-law tariff evidence for constancia de alineamiento y número oficial.","verificationStatus":"VERIFIED"},
+    {"id":"ruts-alignment-2026-cost","sourceVersionId":"source-version-ruts-alignment-2026-06-16","provision":"Ficha RUTS","description":"Operational procedure record and published cost reference for alignment and official number.","verificationStatus":"VERIFIED"},
+    {"id":"decree-590-2026-art25-land-use","sourceVersionId":"source-version-income-law-2026-amendment-2026-04-07","provision":"Art. 25","description":"Decree 590-LXVI evidence for the 2026 residential land-use tariff by classification.","verificationStatus":"VERIFIED"},
+    {"id":"income-law-2026-art26-construction","sourceVersionId":"source-version-income-law-2026-12-31","provision":"Art. 26","description":"2026 municipal income-law construction-license tariff by housing classification.","verificationStatus":"VERIFIED"},
+    {"id":"ruts-completion-2026-cost","sourceVersionId":"source-version-ruts-completion-2026-06-16","provision":"Ficha RUTS","description":"Operational procedure record and published cost reference for completion of work.","verificationStatus":"VERIFIED"},
+    {"id":"income-law-2026-art29-completion","sourceVersionId":"source-version-income-law-2026-12-31","provision":"Art. 29","description":"2026 municipal income-law evidence for the completion-of-work tariff.","verificationStatus":"VERIFIED"}
+  ]
+}
