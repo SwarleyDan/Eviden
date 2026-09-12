@@ -1,5 +1,8 @@
 import evidenceData from "../../data/pachuca/evidence.json";
-import { getPachucaSourceVersion } from "./pachuca-sources";
+import {
+  getPachucaSourceVersion,
+  isPachucaSourceVersionUsable
+} from "./pachuca-sources";
 
 export type PachucaEvidenceStatus = "VERIFIED" | "UNVERIFIED" | "CONFLICT";
 
@@ -28,7 +31,8 @@ export function isPachucaEvidenceUsable(id: string): boolean {
   return (
     evidence !== undefined &&
     evidence.verificationStatus === "VERIFIED" &&
-    getPachucaSourceVersion(evidence.sourceVersionId) !== undefined
+    getPachucaSourceVersion(evidence.sourceVersionId) !== undefined &&
+    isPachucaSourceVersionUsable(evidence.sourceVersionId)
   );
 }
 
