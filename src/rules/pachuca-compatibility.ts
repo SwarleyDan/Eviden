@@ -13,6 +13,7 @@ export type PachucaCompatibilityInput = {
 };
 
 export type CompatibilityStatus = "PASS" | "FAIL" | "UNKNOWN";
+export type CompatibilityUnknownReason = "MISSING_INPUT" | "UNVERIFIED_RULE";
 
 export type PachucaCompatibilityCheck = {
   rule: string;
@@ -22,13 +23,14 @@ export type PachucaCompatibilityCheck = {
   maximum?: number;
   unit?: string;
   reason: string;
+  unknownReason?: CompatibilityUnknownReason;
 };
 
 export type PachucaCompatibilityEstimate = {
   status: "INFERRED";
   classification: PachucaClassification;
-  cos: number;
-  cus: number;
+  cos?: number;
+  cus?: number;
   checks: PachucaCompatibilityCheck[];
 };
 
@@ -76,9 +78,9 @@ export function estimatePachucaClassificationCompatibility(
 
   checks.push(
     input.lotAreaM2 === undefined
-      ? { rule: "minimumLotArea", status: "UNKNOWN", unit: "m²", reason: "Lot area is required to evaluate this rule." }
+      ? { rule: "minimumLotArea", status: "UNKNOWN", unit: "m²", reason: "Lot area is required to evaluate this rule.", unknownReason: "MISSING_INPUT" }
       : ruleSet.minimumLotAreaM2 === undefined
-        ? { rule: "minimumLotArea", status: "UNKNOWN", actual: input.lotAreaM2, unit: "m²", reason: "No verified general minimum was encoded for this classification." }
+        ? { rule: "minimumLotArea", status: "UNKNOWN", actual: input.lotAreaM2, unit: "m²", reason: "No verified general minimum was encoded for this classification.", unknownReason: "UNVERIFIED_RULE" }
         : {
             rule: "minimumLotArea",
             status: input.lotAreaM2 >= ruleSet.minimumLotAreaM2 ? "PASS" : "FAIL",
@@ -91,21 +93,22 @@ export function estimatePachucaClassificationCompatibility(
 
   checks.push(
     input.frontageM === undefined
-      ? { rule: "minimumFrontage", status: "UNKNOWN", unit: "m", reason: "Frontage is required to evaluate this rule." }
+      ? { rule: "minimumFrontage", status: "UNKNOWN", unit: "m", reason: "Frontage is required to evaluate this rule.", unknownReason: "MISSING_INPUT" }
       : {
           rule: "minimumFrontage",
           status: "UNKNOWN",
           actual: input.frontageM,
           unit: "m",
-          reason: "Frontage is captured as project input, but no verified general minimum frontage has been encoded yet."
+          reason: "Frontage is captured as project input, but no verified general minimum frontage has been encoded yet.",
+          unknownReason: "UNVERIFIED_RULE"
         }
   );
 
   checks.push(
     cos === undefined
-      ? { rule: "maximumCOS", status: "UNKNOWN", unit: "ratio", reason: "Lot area and footprint area are required to derive COS." }
+      ? { rule: "maximumCOS", status: "UNKNOWN", unit: "ratio", reason: "Lot area and footprint area are required to derive COS.", unknownReason: "MISSING_INPUT" }
       : ruleSet.maximumCOS === undefined
-        ? { rule: "maximumCOS", status: "UNKNOWN", actual: Number(cos.toFixed(4)), unit: "ratio", reason: "No verified general COS limit was encoded for this classification." }
+        ? { rule: "maximumCOS", status: "UNKNOWN", actual: Number(cos.toFixed(4)), unit: "ratio", reason: "No verified general COS limit was encoded for this classification.", unknownReason: "UNVERIFIED_RULE" }
         : {
             rule: "maximumCOS",
             status: cos <= ruleSet.maximumCOS ? "PASS" : "FAIL",
@@ -118,9 +121,9 @@ export function estimatePachucaClassificationCompatibility(
 
   checks.push(
     input.levels === undefined
-      ? { rule: "maximumLevels", status: "UNKNOWN", unit: "levels", reason: "Number of levels is required to evaluate this rule." }
+      ? { rule: "maximumLevels", status: "UNKNOWN", unit: "levels", reason: "Number of levels is required to evaluate this rule.", unknownReason: "MISSING_INPUT" }
       : ruleSet.maximumLevels === undefined
-        ? { rule: "maximumLevels", status: "UNKNOWN", actual: input.levels, unit: "levels", reason: "No verified general maximum level count was encoded for this classification." }
+        ? { rule: "maximumLevels", status: "UNKNOWN", actual: input.levels, unit: "levels", reason: "No verified general maximum level count was encoded for this classification.", unknownReason: "UNVERIFIED_RULE" }
         : {
             rule: "maximumLevels",
             status: input.levels <= ruleSet.maximumLevels ? "PASS" : "FAIL",
@@ -133,9 +136,9 @@ export function estimatePachucaClassificationCompatibility(
 
   checks.push(
     input.parkingSpaces === undefined
-      ? { rule: "minimumParkingSpaces", status: "UNKNOWN", unit: "spaces", reason: "Parking spaces are required to evaluate this rule." }
+      ? { rule: "minimumParkingSpaces", status: "UNKNOWN", unit: "spaces", reason: "Parking spaces are required to evaluate this rule.", unknownReason: "MISSING_INPUT" }
       : ruleSet.minimumParkingSpaces === undefined
-        ? { rule: "minimumParkingSpaces", status: "UNKNOWN", actual: input.parkingSpaces, unit: "spaces", reason: "No verified general minimum parking requirement was encoded for this classification." }
+        ? { rule: "minimumParkingSpaces", status: "UNKNOWN", actual: input.parkingSpaces, unit: "spaces", reason: "No verified general minimum parking requirement was encoded for this classification.", unknownReason: "UNVERIFIED_RULE" }
         : {
             rule: "minimumParkingSpaces",
             status: input.parkingSpaces >= ruleSet.minimumParkingSpaces ? "PASS" : "FAIL",
@@ -147,33 +150,39 @@ export function estimatePachucaClassificationCompatibility(
   );
 
   checks.push(
-    ruleSet.minimumFrontSetbackM === undefined || input.frontSetbackM === undefined
+    ruleSet.minimumFrontSetbackM === undefined
       ? {
           rule: "minimumFrontSetback",
           status: "UNKNOWN",
           actual: input.frontSetbackM,
-          required: ruleSet.minimumFrontSetbackM,
           unit: "m",
-          reason:
-            ruleSet.minimumFrontSetbackM === undefined
-              ? "No verified general front setback was encoded for this classification."
-              : "A verified setback exists, but the project input does not include a front setback."
+          reason: "No verified general front setback was encoded for this classification.",
+          unknownReason: "UNVERIFIED_RULE"
         }
-      : {
-          rule: "minimumFrontSetback",
-          status: input.frontSetbackM >= ruleSet.minimumFrontSetbackM ? "PASS" : "FAIL",
-          actual: input.frontSetbackM,
-          required: ruleSet.minimumFrontSetbackM,
-          unit: "m",
-          reason: "Compared against the verified minimum front setback."
-        }
+      : input.frontSetbackM === undefined
+        ? {
+            rule: "minimumFrontSetback",
+            status: "UNKNOWN",
+            required: ruleSet.minimumFrontSetbackM,
+            unit: "m",
+            reason: "A verified setback exists, but the project input does not include a front setback.",
+            unknownReason: "MISSING_INPUT"
+          }
+        : {
+            rule: "minimumFrontSetback",
+            status: input.frontSetbackM >= ruleSet.minimumFrontSetbackM ? "PASS" : "FAIL",
+            actual: input.frontSetbackM,
+            required: ruleSet.minimumFrontSetbackM,
+            unit: "m",
+            reason: "Compared against the verified minimum front setback."
+          }
   );
 
   return {
     status: "INFERRED",
     classification: input.classification,
-    cos: cos === undefined ? 0 : Number(cos.toFixed(4)),
-    cus: cus === undefined ? 0 : Number(cus.toFixed(4)),
+    cos: cos === undefined ? undefined : Number(cos.toFixed(4)),
+    cus: cus === undefined ? undefined : Number(cus.toFixed(4)),
     checks
   };
 }
