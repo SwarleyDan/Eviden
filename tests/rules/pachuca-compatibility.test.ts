@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { estimatePachucaClassificationCompatibility } from "../../src/rules/pachuca-compatibility";
 
 describe("Pachuca orientative classification compatibility", () => {
-  it("passes verified residential-medium parameters", () => {
+  it("passes verified residential-medium parameters while marking unverified frontage as unknown", () => {
     const result = estimatePachucaClassificationCompatibility({
       classification: "residential-medium",
       lotAreaM2: 200,
@@ -17,7 +17,7 @@ describe("Pachuca orientative classification compatibility", () => {
     expect(result.status).toBe("INFERRED");
     expect(result.cos).toBe(0.6);
     expect(result.cus).toBe(1.2);
-    expect(result.checks.map((check) => check.status)).toEqual(["PASS", "PASS", "PASS", "PASS", "PASS"]);
+    expect(result.checks.map((check) => check.status)).toEqual(["PASS", "UNKNOWN", "PASS", "PASS", "PASS", "PASS"]);
   });
 
   it("flags residential-medium when verified limits are exceeded", () => {
@@ -32,7 +32,7 @@ describe("Pachuca orientative classification compatibility", () => {
       frontSetbackM: 3
     });
 
-    expect(result.checks.map((check) => check.status)).toEqual(["FAIL", "FAIL", "FAIL", "FAIL", "FAIL"]);
+    expect(result.checks.map((check) => check.status)).toEqual(["FAIL", "UNKNOWN", "FAIL", "FAIL", "FAIL", "FAIL"]);
   });
 
   it("does not invent rules for a classification with no encoded general parameters", () => {
