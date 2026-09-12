@@ -3,6 +3,7 @@ import {
   listPachucaRequirements,
   type PachucaRequirement
 } from "../data/pachuca-procedures";
+import { isPachucaSourceVersionUsable } from "../data/pachuca-sources";
 
 export type PachucaRuleInput = {
   isNewBuild: boolean;
@@ -63,6 +64,21 @@ function decideRequirement(
   requirement: PachucaRequirement,
   input: PachucaRuleInput
 ): RequirementDecision {
+  const sourcesUsable =
+    requirement.sourceVersionIds.length > 0 &&
+    requirement.sourceVersionIds.every(isPachucaSourceVersionUsable);
+
+  if (!sourcesUsable) {
+    return {
+      requirementId: requirement.id,
+      procedureId: requirement.procedureId,
+      name: requirement.name,
+      status: "NEEDS_CHECK",
+      reason: "The requirement cannot be activated because its source evidence is missing or not currently usable.",
+      sourceVersionIds: [...requirement.sourceVersionIds]
+    };
+  }
+
   if (!requirement.conditional) {
     return {
       requirementId: requirement.id,
