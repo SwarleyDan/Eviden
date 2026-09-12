@@ -1,0 +1,42 @@
+{
+  "jurisdiction": "mx-hgo-pachuca",
+  "basis": "Reglamento de la Ley de Asentamientos Humanos, Desarrollo Urbano y Ordenamiento Territorial del Estado de Hidalgo, published 2015-05-18",
+  "status": "INFERRED_ONLY",
+  "classifications": {
+    "progressive": {},
+    "economic": {},
+    "popular": {
+      "minimumLotAreaM2": 90,
+      "maximumCOS": 0.70,
+      "maximumLevels": 2,
+      "minimumParkingSpaces": 1
+    },
+    "social-interest": {
+      "minimumLotAreaM2": 90,
+      "maximumCOS": 0.70,
+      "maximumLevels": 2,
+      "minimumParkingSpaces": 1,
+      "minimumFrontSetbackM": 2.5
+    },
+    "medium-interest": {
+      "minimumLotAreaM2": 105,
+      "maximumCOS": 0.70,
+      "maximumLevels": 3,
+      "minimumParkingSpaces": 1,
+      "minimumFrontSetbackM": 3
+    },
+    "residential-medium": {
+      "minimumLotAreaM2": 200,
+      "maximumCOS": 0.65,
+      "maximumLevels": 3,
+      "minimumParkingSpaces": 2,
+      "minimumFrontSetbackM": 5
+    },
+    "residential-high": {
+      "minimumLotAreaM2": 300,
+      "maximumCOS": 0.60,
+      "maximumLevels": 3
+    },
+    "campestre": {}
+  }
+}
