@@ -15,6 +15,8 @@ export type PachucaClassification =
 export type PachucaFeeLine = MoneyResult & {
   feeId: string;
   unit: "fixed" | "per_m2" | "per_lot";
+  sourceVersionIds: string[];
+  evidenceRefs: string[];
 };
 
 export type PachucaEstimate = {
@@ -62,7 +64,13 @@ export function estimatePachucaSingleFamilyNewBuild(
     }
 
     const result = calculateFee(fee, areaM2);
-    lines.push({ ...result, feeId: id, unit: fee.unit });
+    lines.push({
+      ...result,
+      feeId: id,
+      unit: fee.unit,
+      sourceVersionIds: [...fee.sourceVersionIds],
+      evidenceRefs: [...(fee.evidenceRefs ?? [])]
+    });
   }
 
   const totalKnown = {
