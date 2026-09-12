@@ -32,6 +32,24 @@ describe("Pachuca classification candidates", () => {
     const economic = result.candidates.find((item) => item.classification === "economic");
     expect(economic?.status).toBe("INDETERMINATE");
     expect(economic?.unknownRules.length).toBeGreaterThan(0);
+    expect(economic?.missingInputs).toHaveLength(0);
+    expect(economic?.unverifiedRules.length).toBeGreaterThan(0);
+  });
+
+  it("keeps candidates indeterminate when a required project input is missing", () => {
+    const result = analyzePachucaClassificationCandidates({
+      lotAreaM2: 220,
+      footprintM2: 130,
+      totalBuiltAreaM2: 260,
+      levels: 2,
+      parkingSpaces: 2,
+      frontSetbackM: 5
+    });
+
+    const residentialMedium = result.candidates.find((item) => item.classification === "residential-medium");
+    expect(residentialMedium?.status).toBe("INDETERMINATE");
+    expect(residentialMedium?.missingInputs).toContain("minimumFrontage");
+    expect(residentialMedium?.unknownRules).toContain("minimumFrontage");
   });
 
   it("rejects candidates when a verified limit is exceeded", () => {
