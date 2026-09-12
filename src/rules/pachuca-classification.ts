@@ -1,5 +1,9 @@
 import type { PachucaClassification } from "../calculator/pachuca";
-import { estimatePachucaClassificationCompatibility, type PachucaCompatibilityInput, type PachucaCompatibilityEstimate } from "./pachuca-compatibility";
+import {
+  estimatePachucaClassificationCompatibility,
+  type PachucaCompatibilityInput,
+  type PachucaCompatibilityEstimate
+} from "./pachuca-compatibility";
 
 export type ClassificationCandidateStatus = "COMPATIBLE" | "INCOMPATIBLE" | "INDETERMINATE";
 
@@ -9,6 +13,7 @@ export type PachucaClassificationCandidate = {
   compatibility: PachucaCompatibilityEstimate;
   failedRules: string[];
   unknownRules: string[];
+  sourceVersionIds: string[];
 };
 
 export type PachucaClassificationAnalysis = {
@@ -30,6 +35,25 @@ const CLASSIFICATIONS: PachucaClassification[] = [
   "campestre"
 ];
 
+const COMPATIBILITY_SOURCE_VERSION_ID = "source-version-human-settlements-regulation-2015-05-18";
+
+function classifyCandidate(
+  checks: PachucaCompatibilityEstimate["checks"]
+): ClassificationCandidateStatus {
+  if (checks.some((check) => check.status === "FAIL")) return "INCOMPATIBLE";
+
+  // UNKNOWN with a required value means a verified rule exists but its input is
+  // missing. UNKNOWN without a required value means no verified rule is encoded
+  // for that dimension and must not, by itself, block a candidate.
+  const missingRequiredInputs = checks.some(
+    (check) => check.status === "UNKNOWN" && check.required !== undefined
+  );
+  if (missingRequiredInputs) return "INDETERMINATE";
+
+  const hasVerifiedRule = checks.some((check) => check.status === "PASS");
+  return hasVerifiedRule ? "COMPATIBLE" : "INDETERMINATE";
+}
+
 export function analyzePachucaClassificationCandidates(
   input: Omit<PachucaCompatibilityInput, "classification">
 ): PachucaClassificationAnalysis {
@@ -45,14 +69,14 @@ export function analyzePachucaClassificationCandidates(
       .filter((check) => check.status === "UNKNOWN")
       .map((check) => check.rule);
 
-    const status: ClassificationCandidateStatus =
-      failedRules.length > 0
-        ? "INCOMPATIBLE"
-        : unknownRules.length > 0
-          ? "INDETERMINATE"
-          : "COMPATIBLE";
-
-    return { classification, status, compatibility, failedRules, unknownRules };
+    return {
+      classification,
+      status: classifyCandidate(compatibility.checks),
+      compatibility,
+      failedRules,
+      unknownRules,
+      sourceVersionIds: [COMPATIBILITY_SOURCE_VERSION_ID]
+    };
   });
 
   return {
