@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getPachucaSource,
+  getPachucaSourceActivationStatus,
   getPachucaSourceVersion,
   isPachucaSourceVersionUsable,
   resolvePachucaSourceVersion
@@ -16,12 +17,14 @@ describe("Pachuca source provenance", () => {
     expect(resolved?.source.authorityLevel).toBe("PRIMARY_OFFICIAL");
     expect(resolved?.source.url).toContain("Ley_Ingresos_Pachuca_2026.pdf");
     expect(resolved?.version.effectiveFrom).toBe("2026-01-01");
+    expect(getPachucaSourceActivationStatus("source-version-income-law-2026-12-31")).toBe("USABLE");
     expect(isPachucaSourceVersionUsable("source-version-income-law-2026-12-31")).toBe(true);
   });
 
   it("keeps unresolved source-version IDs explicit", () => {
     expect(getPachucaSourceVersion("missing-version")).toBeUndefined();
     expect(resolvePachucaSourceVersion("missing-version")).toBeUndefined();
+    expect(getPachucaSourceActivationStatus("missing-version")).toBe("MISSING");
     expect(isPachucaSourceVersionUsable("missing-version")).toBe(false);
   });
 
@@ -33,6 +36,8 @@ describe("Pachuca source provenance", () => {
 
     expect(source?.authorityLevel).toBe("PRIMARY_OFFICIAL");
     expect(version?.status).toBe("PENDING_SCOPE_REVIEW");
+    expect(getPachucaSourceActivationStatus("source-version-pachuca-2026-08-25")).toBe("MISSING");
+    expect(getPachucaSourceActivationStatus("source-version-pachuca-ppdu-2026-08-25")).toBe("PENDING_SCOPE_REVIEW");
     expect(isPachucaSourceVersionUsable("source-version-pachuca-ppdu-2026-08-25")).toBe(false);
   });
 });
