@@ -81,6 +81,14 @@ export function estimatePachucaClassificationCompatibility(
         }
   );
 
+  checks.push({
+    rule: "minimumFrontage",
+    status: "UNKNOWN",
+    actual: input.frontageM,
+    unit: "m",
+    reason: "Frontage is captured as project input, but no verified general minimum frontage has been encoded yet."
+  });
+
   checks.push(
     ruleSet.maximumCOS === undefined
       ? { rule: "maximumCOS", status: "UNKNOWN", actual: cos, unit: "ratio", reason: "No verified general COS limit was encoded for this classification." }
