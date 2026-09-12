@@ -1,4 +1,5 @@
 import feesData from "../../data/pachuca/fees.json";
+import { isPachucaSourceVersionUsable } from "./pachuca-sources";
 
 export type FeeStatus =
   | "VERIFIED"
@@ -25,6 +26,10 @@ const fees = feesData.fees as PachucaFee[];
 
 export function getPachucaFee(id: string): PachucaFee | undefined {
   return fees.find((fee) => fee.id === id);
+}
+
+export function isPachucaFeeUsable(fee: PachucaFee): boolean {
+  return fee.status === "VERIFIED" && fee.sourceVersionIds.length > 0 && fee.sourceVersionIds.every(isPachucaSourceVersionUsable);
 }
 
 export function listPachucaFees(): readonly PachucaFee[] {
