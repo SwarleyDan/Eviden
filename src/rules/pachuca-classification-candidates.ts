@@ -37,8 +37,17 @@ const COMPATIBILITY_SOURCE_VERSION_ID = "source-version-human-settlements-regula
 
 function classify(checks: PachucaCompatibilityCheck[]): PachucaCandidateStatus {
   if (checks.some((check) => check.status === "FAIL")) return "INCOMPATIBLE";
-  if (checks.some((check) => check.status === "UNKNOWN")) return "INDETERMINATE";
-  return "COMPATIBLE";
+
+  // An UNKNOWN with a required value means a known rule could not be evaluated
+  // because an input is missing. UNKNOWN without a required value means that no
+  // verified rule is encoded for that dimension and must not block compatibility.
+  const missingRequiredInputs = checks.some(
+    (check) => check.status === "UNKNOWN" && check.required !== undefined
+  );
+  if (missingRequiredInputs) return "INDETERMINATE";
+
+  const hasVerifiedPass = checks.some((check) => check.status === "PASS");
+  return hasVerifiedPass ? "COMPATIBLE" : "INDETERMINATE";
 }
 
 export function analyzePachucaClassificationCandidates(
