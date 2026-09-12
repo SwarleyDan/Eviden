@@ -17,6 +17,7 @@ export type PachucaFee = {
   formulaType: "FIXED" | "PER_UNIT" | "TIERED" | "PERCENTAGE" | "COMPOSITE" | "CONDITIONAL";
   status: FeeStatus;
   sourceVersionIds: string[];
+  evidenceRefs?: string[];
   notes?: string;
 };
 
