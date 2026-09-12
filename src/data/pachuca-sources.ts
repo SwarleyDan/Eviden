@@ -50,6 +50,11 @@ export function resolvePachucaSourceVersion(id: string):
   return { source, version };
 }
 
+export function isPachucaSourceVersionUsable(id: string): boolean {
+  const version = getPachucaSourceVersion(id);
+  return version !== undefined && version.status !== "PENDING_SCOPE_REVIEW";
+}
+
 export function listPachucaSources(): readonly PachucaSource[] {
   return data.sources;
 }
