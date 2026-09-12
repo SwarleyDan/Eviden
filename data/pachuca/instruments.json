@@ -1,0 +1,45 @@
+{
+  "instruments": [
+    {
+      "id": "state-human-settlements-regulation-2015",
+      "name": "Reglamento de la Ley de Asentamientos Humanos, Desarrollo Urbano y Ordenamiento Territorial del Estado de Hidalgo",
+      "type": "STATE_REGULATION",
+      "status": "ACTIVE_REFERENCE",
+      "sourceVersionId": "source-version-human-settlements-regulation-2015-05-18",
+      "notes": "Provides general development parameters and classifications. It must not be used by itself to declare the official zoning classification of an individual parcel."
+    },
+    {
+      "id": "pachuca-construction-regulation-2024",
+      "name": "Reglamento de Construcciones y Urbanas 2024",
+      "type": "MUNICIPAL_REGULATION",
+      "status": "ACTIVE_REFERENCE",
+      "sourceVersionId": "source-version-construction-regulation-2024",
+      "notes": "Municipal construction and urban-actions regulatory framework. Article 443 was reformed in 2025; the registry should track later amendments before relying on sanctions or other changed provisions."
+    },
+    {
+      "id": "pachuca-poel-2022",
+      "name": "Programa de Ordenamiento Ecológico Local del Municipio de Pachuca de Soto",
+      "type": "LOCAL_ECOLOGICAL_ORDERING",
+      "status": "ACTIVE_REFERENCE",
+      "sourceVersionId": "source-version-pachuca-poel-2022-12-30",
+      "notes": "RUTS identifies this instrument as relevant to the Dictamen de Congruencia for new construction. Exact document URL and parcel-level applicability still require verification."
+    },
+    {
+      "id": "pachuca-pmdu-2022",
+      "name": "Programa Municipal de Desarrollo Urbano de Pachuca de Soto 2021/2022",
+      "type": "MUNICIPAL_DEVELOPMENT_PLAN",
+      "status": "HISTORICAL_OR_STATUS_REVIEW",
+      "notes": "IMIP currently labels the PMDU 2022 as VIGENTE / HISTÓRICO while also presenting a current PMDU version. EVIDEN must not use this record as an unqualified current zoning authority until the legal status and effective instrument are resolved."
+    },
+    {
+      "id": "pachuca-mineral-ppdu-2026",
+      "name": "Programa Parcial de Desarrollo Urbano de Pachuca de Soto y Mineral de la Reforma",
+      "type": "PARTIAL_DEVELOPMENT_PLAN",
+      "status": "PENDING_SCOPE_REVIEW",
+      "sourceVersionId": "source-version-pachuca-ppdu-2026-08-25",
+      "scope": ["Pachuca de Soto", "Mineral de la Reforma"],
+      "publishedAt": "2026-08-25",
+      "notes": "Published in Periódico Oficial del Estado de Hidalgo, Alcance 0 No. 34, 514 pages. The publication is official, but EVIDEN must review its legal basis, effective scope, zoning hierarchy and interaction with PMDU/other instruments before treating it as an active parcel-level rule."
+    }
+  ]
+}
