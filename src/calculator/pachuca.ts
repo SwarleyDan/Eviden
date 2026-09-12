@@ -1,6 +1,7 @@
 import type { MoneyResult } from "./index";
 import { calculatePerSquareMeter } from "./index";
 import { getPachucaFee } from "../data/pachuca-fees";
+import { isPachucaSourceVersionUsable } from "../data/pachuca-sources";
 
 export type PachucaClassification =
   | "progressive"
@@ -38,6 +39,10 @@ function calculateFee(
   return calculatePerSquareMeter(areaM2, fee.amount);
 }
 
+function hasUsableSources(sourceVersionIds: string[]): boolean {
+  return sourceVersionIds.length > 0 && sourceVersionIds.every(isPachucaSourceVersionUsable);
+}
+
 export function estimatePachucaSingleFamilyNewBuild(
   areaM2: number,
   classification: PachucaClassification
@@ -58,7 +63,7 @@ export function estimatePachucaSingleFamilyNewBuild(
 
   for (const id of feeIds) {
     const fee = getPachucaFee(id);
-    if (!fee || fee.status !== "VERIFIED") {
+    if (!fee || fee.status !== "VERIFIED" || !hasUsableSources(fee.sourceVersionIds)) {
       unknownFees.push(id);
       continue;
     }
