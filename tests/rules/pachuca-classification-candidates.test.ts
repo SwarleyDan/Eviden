@@ -8,7 +8,7 @@ describe("Pachuca classification candidate analyzer", () => {
     footprintM2: 180,
     totalBuiltAreaM2: 360,
     levels: 2,
-    parkingSpaces: 2,
+    parkingSpaces: 1,
     frontSetbackM: 5
   };
 
@@ -17,7 +17,7 @@ describe("Pachuca classification candidate analyzer", () => {
 
     expect(result.status).toBe("INFERRED");
     expect(result.candidates).toHaveLength(8);
-    expect(result.candidates.slice(0, 3).every((candidate) => candidate.status === "COMPATIBLE")).toBe(true);
+    expect(result.candidates.slice(0, 4).every((candidate) => candidate.status === "COMPATIBLE")).toBe(true);
     expect(result.candidates.some((candidate) => candidate.status === "INDETERMINATE")).toBe(true);
     expect(result.candidates.some((candidate) => candidate.status === "INCOMPATIBLE")).toBe(true);
   });
