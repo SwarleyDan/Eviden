@@ -13,6 +13,8 @@ export type PachucaClassificationCandidate = {
   compatibility: PachucaCompatibilityEstimate;
   failedRules: string[];
   unknownRules: string[];
+  missingInputs: string[];
+  unverifiedRules: string[];
   sourceVersionIds: string[];
 };
 
@@ -42,13 +44,13 @@ function classifyCandidate(
 ): ClassificationCandidateStatus {
   if (checks.some((check) => check.status === "FAIL")) return "INCOMPATIBLE";
 
-  // UNKNOWN with a required value means a verified rule exists but its input is
-  // missing. UNKNOWN without a required value means no verified rule is encoded
-  // for that dimension and must not, by itself, block a candidate.
-  const missingRequiredInputs = checks.some(
-    (check) => check.status === "UNKNOWN" && check.required !== undefined
+  // Missing project inputs keep a candidate indeterminate even when other
+  // verified rules pass. A rule that is simply not encoded is tracked
+  // separately and does not by itself make a candidate indeterminate.
+  const hasMissingInputs = checks.some(
+    (check) => check.status === "UNKNOWN" && check.unknownReason === "MISSING_INPUT"
   );
-  if (missingRequiredInputs) return "INDETERMINATE";
+  if (hasMissingInputs) return "INDETERMINATE";
 
   const hasVerifiedRule = checks.some((check) => check.status === "PASS");
   return hasVerifiedRule ? "COMPATIBLE" : "INDETERMINATE";
@@ -68,6 +70,12 @@ export function analyzePachucaClassificationCandidates(
     const unknownRules = compatibility.checks
       .filter((check) => check.status === "UNKNOWN")
       .map((check) => check.rule);
+    const missingInputs = compatibility.checks
+      .filter((check) => check.status === "UNKNOWN" && check.unknownReason === "MISSING_INPUT")
+      .map((check) => check.rule);
+    const unverifiedRules = compatibility.checks
+      .filter((check) => check.status === "UNKNOWN" && check.unknownReason === "UNVERIFIED_RULE")
+      .map((check) => check.rule);
 
     return {
       classification,
@@ -75,6 +83,8 @@ export function analyzePachucaClassificationCandidates(
       compatibility,
       failedRules,
       unknownRules,
+      missingInputs,
+      unverifiedRules,
       sourceVersionIds: [COMPATIBILITY_SOURCE_VERSION_ID]
     };
   });
